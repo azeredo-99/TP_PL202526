@@ -1,89 +1,38 @@
-# Processamento de Linguagens - Projeto LFun
+# LFun Language Interpreter
 
-Este repositório contém a resolução do trabalho prático da unidade curricular de **Processamento de Linguagens** (2º Ano, 2º Semestre) do curso de **LESI** (Licenciatura em Engenharia de Sistemas Informáticos).
+A lexer, parser and evaluator for **LFun**, a small functional language, built incrementally in four stages: tokenizing, a basic grammar, a full grammar with functions and conditionals, and finally a complete evaluator with pattern matching.
 
-O objetivo principal deste projeto é desenvolver um analisador léxico, sintático e um interpretador/avaliador para a linguagem especificada no enunciado (**LFun**).
+## Stages
 
-## Estrutura do Projeto
+| Stage | What it adds | Key files |
+|---|---|---|
+| [A — Lexer](./A/) | Tokenizes reserved words, operators and literals; line (`--`) and block (`{- -}`) comments | `lfun_lexer.py` |
+| [B — Basic grammar](./B/) | Arithmetic/boolean expressions, `let` bindings, first AST nodes | `lfun_grammar.py`, `ast_nodes.py` |
+| [C — Full grammar](./C/) | Function signatures/definitions, conditionals, function calls | adds `IfExpr`, `CallExpr`, `FunDef` |
+| [D — Evaluator](./D/) | A decoupled evaluator (`eval.py`) over the full AST, plus pattern matching | `eval.py`, `main.py` (REPL + file runner) |
 
-O projeto foi desenvolvido de forma incremental e está dividido em quatro pastas principais (A, B, C e D), correspondentes às fases da avaliação:
+## Language features
 
-### [Parte A - Análise Léxica](./A/)
-Construção do analisador léxico (**Lexer**).
-- Identificação e extração de tokens da linguagem (palavras reservadas, operadores, literais).
-- Suporte a comentários de linha (`--`) e de bloco (`{- -}`).
-- Ficheiros: `lfun_lexer.py`, `lfun_lexer_test.py`
+- Integers and booleans, arithmetic/relational/logical operators
+- Variable and function definitions with type signatures (`fun f : Int -> Bool`)
+- Conditionals (`if E then E else E`)
+- Pattern matching (`when (expr) is ... end`) with literal cases, multiple alternatives, wildcards and variable capture
 
-### [Parte B - Gramática Básica + AST Nodes](./B/)
-Introdução da gramática e da representação intermédia básica.
-- Gramática para expressões aritméticas, booleanas e definições `let`.
-- Primeiros nós AST: `NumberLiteral`, `BoolLiteral`, `VarExpr`, `BinOp`, `UnaryOp`, `LetStmt`.
-- Ficheiros: `lfun_lexer.py`, `ast_nodes.py`, `lfun_grammar.py`, `lfun_grammar_test.py`
+## Tech stack
 
-### [Parte C - Gramática Completa](./C/)
-Extensão da gramática com funções, condicionais e chamadas.
-- Adicionadas regras para assinatura de função (`fun f : T -> T`), definição de função (`let f x = E`), condicional (`if ... then ... else`) e chamada (`f(E)`).
-- Novos nós AST: `IfExpr`, `CallExpr`, `FunSig`, `FunDef`.
-- Ficheiros: `lfun_lexer.py`, `ast_nodes.py`, `lfun_grammar.py`, `lfun_grammar_test.py`
+Python 3 · PLY (Python Lex-Yacc)
 
-### [Parte D - Avaliador Completo](./D/)
-Fase final com avaliador e suporte a **Pattern Matching** (`when`).
-- **AST completa:** todos os nós, incluindo `MatchExpr`, `Case`, `IntPattern`, `WildcardPattern`, `VarPattern`, `LetExpr`, `FunExpr`.
-- **Pattern Matching:** blocos `when (expr) is ... end` com literais, alternativas múltiplas (`,`), wildcard (`_`) e captura de variáveis.
-- **Avaliador desacoplado** (`eval.py`) que opera exclusivamente sobre a AST.
-- **Ponto de entrada** (`main.py`) com modo interativo (REPL) e execução de ficheiros `.lfun`.
-- Ficheiros: `lexer.py`, `ast_nodes.py`, `grammar.py`, `eval.py`, `main.py`, `test_eval.py`, `ex1.lfun`–`ex5.lfun`
+## Running
 
-## Tecnologias Utilizadas
-- **Python 3**
-- **PLY (Python Lex-Yacc):** Utilizado para a construção do Lexer e Parser.
-
-## Como Executar
-
-### Parte A — testar o lexer
-```bash
-cd A
-python lfun_lexer_test.py
-```
-
-### Parte B — testar o parser básico
-```bash
-cd B
-python lfun_grammar_test.py
-```
-
-### Parte C — testar o parser completo
-```bash
-cd C
-python lfun_grammar_test.py
-```
-
-### Parte D — interpretador interativo (REPL)
 ```bash
 cd D
-python main.py
+python main.py              # interactive REPL
+python main.py ex1.lfun     # run a source file
+python test_eval.py         # run the evaluator test suite
 ```
 
-### Parte D — executar um ficheiro `.lfun`
-```bash
-cd D
-python main.py ex1.lfun
-```
+Earlier stages can be exercised the same way from `A/`, `B/` and `C/` with their respective `*_test.py`.
 
-### Parte D — executar os testes
-```bash
-cd D
-python test_eval.py
-```
+## Authors
 
-## Funcionalidades da Linguagem (LFun)
-- **Tipos Básicos:** Inteiros e Booleanos (`true`, `false`).
-- **Operações:** Aritméticas (`+`, `-`, `*`, `/`), relacionais (`<`, `>`, `<=`, `>=`, `==`, `!=`) e lógicas (`&&`, `||`).
-- **Definições:** Declaração de variáveis (`let x : Int = E`) e funções (`let f x = E`).
-- **Assinaturas de tipo:** `fun f : Int -> Bool`
-- **Condicionais:** `if E then E else E`
-- **Pattern Matching (`when`):**
-  - Casos com valores literais inteiros e booleanos.
-  - Alternativas múltiplas no mesmo caso (`0, 1 -> ...`).
-  - Wildcard (`_`) para captura de qualquer valor.
-  - Captura de variáveis nos padrões.
+Built with a small team: Guilherme Azeredo, Rodrigo Pinheiro and Leonardo — [GitHub](https://github.com/azeredo-99)
